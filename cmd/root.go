@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"desafio-goexpert-2/internal/validation"
 	"fmt"
 	"os"
 
@@ -14,20 +15,32 @@ var rootCmd = &cobra.Command{
 	Long: `A simple stress test cli tool that can be used to test the performance of a web service and generate a report.
 It achieves this by sending a number of requests to the web service and measuring the time it takes to receive a response.`,
 
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
 		url, err := cmd.Flags().GetString("url")
-		requests, err := cmd.Flags().GetInt("requests")
-		concurrency, err := cmd.Flags().GetInt("concurrency")
-
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return fmt.Errorf("failed to get URL flag: %w", err)
+		}
+
+		requests, err := cmd.Flags().GetInt("requests")
+		if err != nil {
+			return fmt.Errorf("failed to get requests flag: %w", err)
+		}
+
+		concurrency, err := cmd.Flags().GetInt("concurrency")
+		if err != nil {
+			return fmt.Errorf("failed to get concurrency flag: %w", err)
+		}
+
+		if err := validation.ValidateFlags(url, requests, concurrency); err != nil {
+			return err
 		}
 
 		fmt.Printf("Testing URL: %s\n", url)
 		fmt.Printf("Requests: %d\n", requests)
 		fmt.Printf("Concurrency: %d\n", concurrency)
+
+		return nil
 	},
 }
 
