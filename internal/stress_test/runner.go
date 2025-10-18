@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/leaanthony/spinner"
 )
 
 type HttpStatusCounter struct {
@@ -36,6 +38,8 @@ func NewStressRunner(url string, requests int, concurrency int) *StressRunner {
 
 func (r *StressRunner) Run() {
 	start := time.Now()
+	spinner := spinner.New()
+	spinner.Start("Stress testing...")
 
 	httpStatusCounter := HttpStatusCounter{counts: make(map[int]int)}
 	workers := r.determineWorkers()
@@ -50,6 +54,7 @@ func (r *StressRunner) Run() {
 	r.queueRequestJobs(jobs)
 	r.waitForCompletion(requestsWg, workersWg)
 
+	spinner.Success("Stress testing completed!")
 	r.reportResults(start, time.Now(), httpStatusCounter.counts)
 }
 
@@ -92,7 +97,7 @@ func (r *StressRunner) waitForCompletion(requestsWg, workersWg *sync.WaitGroup) 
 }
 
 func doDummyRequest() int {
-	random_stress_utils.RandomSleep(100*time.Millisecond, 1000*time.Millisecond)
+	random_stress_utils.RandomSleep(10*time.Millisecond, 500*time.Millisecond)
 	return random_stress_utils.RandomHttpStatus()
 }
 
