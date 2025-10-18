@@ -75,8 +75,12 @@ func doDummyRequest() int {
 
 func printCounts(counts map[int]int) {
 
+	fmt.Printf("HTTP 200 - %d\n", counts[http.StatusOK])
+
 	for k, v := range counts {
-		fmt.Printf("HTTP %d - %d\n", k, v)
+		if k != http.StatusOK {
+			fmt.Printf("HTTP %d - %d\n", k, v)
+		}
 	}
 }
 
