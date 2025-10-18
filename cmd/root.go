@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"desafio-goexpert-2/internal/stress_test"
 	"desafio-goexpert-2/internal/validation"
 	"fmt"
 	"os"
@@ -39,6 +40,9 @@ It achieves this by sending a number of requests to the web service and measurin
 		fmt.Printf("Testing URL: %s\n", url)
 		fmt.Printf("Requests: %d\n", requests)
 		fmt.Printf("Concurrency: %d\n", concurrency)
+
+		runner := stress_test.NewStressRunner(url, requests, concurrency)
+		runner.Run()
 
 		return nil
 	},
