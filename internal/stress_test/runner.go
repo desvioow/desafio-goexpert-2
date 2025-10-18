@@ -64,8 +64,8 @@ func (r *StressRunner) startWorkerPool(workers int, httpClient *http.Client, job
 		go func() {
 			defer workersWg.Done()
 			for range jobs {
-				//status := doRequestWithClient(httpClient, r.Url)
-				status := doDummyRequest()
+				status := doRequestWithClient(httpClient, r.Url)
+				//status := doDummyRequest()
 				counter.Increment(status)
 				requestsWg.Done()
 			}
